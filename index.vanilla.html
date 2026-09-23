@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all">
+  <title>soldshow — Ticket Sales Infrastructure for Organizers</title>
+  <meta name="description" content="A ticket sales system built for organizers — creative, tracked pages, automated follow-up, and a live report of what actually sold tickets.">
+
+  <!-- Typography: Exclusively Blauer Nue & Abygaer (Self-hosted) -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-numa">
+
+  <!-- Pre-order / Teardown Pop-up Modal (Exact Numa 2-Column Structure) -->
+  <div class="pop-up pop-up__preorder" id="teardown-modal" aria-hidden="true">
+    <div class="pop-up__overlay pop-up__bg js-close-popup"></div>
+    <div class="pop-up__content pop-up__contents">
+      <button type="button" class="pop-up__close js-close-popup" aria-label="Close"></button>
+      
+      <!-- Modal Left Image -->
+      <div class="pop-up__img-wrapper">
+        <img src="assets/concert.jpg" alt="SoldShow Live Event" class="pop-up__img-2">
+      </div>
+
+      <!-- Modal Right Form -->
+      <div class="pop-up__form">
+        <form class="pop-up__default-form" id="popup-form">
+          <div class="pop-up__description-wrapper">
+            <h3 class="text-title h3 text--base">Get a free <span class="font-accent">teardown</span></h3>
+            <p class="text text-3 text--muted">Built from your public pages and live ads. No access required to start.</p>
+          </div>
+
+          <div class="pop-up_input-content">
+            <label for="modal-event" class="text-subtitle text-4 text--muted mono">EVENT NAME</label>
+            <input id="modal-event" placeholder="e.g. Summer Solstice Fest 2026" type="text" class="form__input pop-up__input text-3" required>
+          </div>
+
+          <div class="pop-up_input-content">
+            <label for="modal-url" class="text-subtitle text-4 text--muted mono">TICKETING / LIVE ADS URL</label>
+            <input id="modal-url" placeholder="https://eventbrite.com/e/... or ticketing site" type="url" class="form__input pop-up__input text-3" required>
+          </div>
+
+          <div class="pop-up_input-content">
+            <label for="modal-email" class="text-subtitle text-4 text--muted mono">ORGANIZER EMAIL</label>
+            <input id="modal-email" placeholder="alex@eventorganizer.com" type="email" class="form__input pop-up__input text-3" required>
+          </div>
+
+          <div class="pop-up_input-content">
+            <label for="modal-gross" class="text-subtitle text-4 text--muted mono">ESTIMATED EVENT GROSS</label>
+            <select id="modal-gross" class="form__input pop-up__input text-3">
+              <option value="$15k–$30k">$15,000 – $30,000</option>
+              <option value="$30k+">$30,000+</option>
+            </select>
+          </div>
+
+          <div class="text text-4 pop-up__pravicy-policy">
+            <span class="text--muted">Audit ready within 48 hours. Built purely from public data.</span>
+          </div>
+
+          <button type="submit" class="button pop-up-button fill--amber">
+            <span class="text-button button-text text--base">Get a free teardown</span>
+          </button>
+        </form>
+
+        <div class="form__state-success" id="popup-success" style="display: none;">
+          <div class="pop-up__description-wrapper">
+            <h3 class="text-title h3 text--base">Teardown Queued</h3>
+            <p class="text text-3 text--muted">We are analyzing your public ticketing page and active ad creative now. Your teardown report will arrive within 48 hours.</p>
+          </div>
+          <button type="button" class="button pop-up-button fill--amber js-close-popup" style="margin-top: 2vw;">
+            <span class="text-button button-text text--base">Close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Adaptive Menu Drawer (Numa Style) -->
+  <div class="pop-up menu-adaptive__popup" id="adaptive-menu" aria-hidden="true">
+    <div class="pop-up__overlay overlay__pop-up-adaptive js-close-menu"></div>
+    <div class="pop-up__content menu-adaptive">
+      <button type="button" class="pop-up__close-adaptive js-close-menu" aria-label="Close menu">&times;</button>
+      <div class="menu-adaptive__text-wrapper">
+        <div class="menu-adaptive__links">
+          <a href="#system" class="submenu-item-text menu-adaptive__link js-close-menu">What It Does</a>
+          <a href="#how-it-works" class="submenu-item-text menu-adaptive__link js-close-menu">How It Works</a>
+        </div>
+        <button type="button" class="button menu-adaptive__button fill--amber js-open-teardown">
+          <span class="text-button button-text text--base">Get a free teardown</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Numa Floating Pill Header -->
+  <header class="section header" id="main-header">
+    <div class="container header__container">
+      <div class="header__wrapper">
+        
+        <!-- Left: Pill Menu with 4 Dots (Numa Exact Glass Style) -->
+        <div class="menu__wrapper" id="header-menu-pill">
+          <div role="button" class="menu__head js-toggle-menu" aria-label="Toggle navigation menu">
+            <div class="text menu-item-text text--base">
+              <span>Menu</span>
+            </div>
+            <div class="menu__icon-wrapper">
+              <div class="menu__icon-circle"></div>
+              <div class="menu__icon-circle"></div>
+              <div class="menu__icon-circle"></div>
+              <div class="menu__icon-circle"></div>
+            </div>
+          </div>
+          <div class="menu__line"></div>
+          <div class="menu__items">
+            <div class="menu__item-mask">
+              <a href="#system" class="link submenu-item-text text--base menu__link">What It Does</a>
+            </div>
+            <div class="menu__item-mask">
+              <a href="#how-it-works" class="link submenu-item-text text--base menu__link">How It Works</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center: Official Wide Logo Uploaded by User -->
+        <a href="#" class="link-block logo__wrapper" aria-label="soldshow">
+          <img src="assets/soldshow-wide-dark.png" alt="soldshow" class="soldshow-header-logo">
+        </a>
+
+        <!-- Right: Pill Action Button with '+' Plus Icon (Numa Exact) -->
+        <button type="button" class="button header-button js-open-teardown">
+          <span class="text-button menu-item-text text--base">
+            <span>Get a free teardown</span>
+          </span>
+          <span class="svg-icon header-button__svg-icon">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.5 2.1C6.9 2.1 7.26 2.42 7.26 2.84V5.74H10.16C10.58 5.74 10.93 6.08 10.93 6.5C10.93 6.92 10.58 7.26 10.16 7.26H7.26V10.16C7.26 10.58 6.92 10.92 6.5 10.92C6.08 10.92 5.74 10.58 5.74 10.16V7.26H2.84C2.42 7.26 2.08 6.92 2.08 6.5C2.08 6.08 2.42 5.74 2.84 5.74H5.74V2.84C5.74 2.42 6.08 2.1 6.5 2.1Z" fill="#0B0D09"/>
+            </svg>
+          </span>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- SECTION 1: COVER / HERO (Exact Numa Viewport Frame) -->
+  <section class="section cover" id="hero">
+    <div class="container cover__camera">
+      <div class="cover__mask-wrapper">
+        <div class="cover__mask">
+          <div class="cover__content-wrapper">
+            
+            <!-- Atmospheric Bright Stage Lighting Canvas -->
+            <div class="cover__visual-stage">
+              <div class="stage-gradient-glow"></div>
+              <div class="stage-grid-lines"></div>
+              <img src="assets/concert.jpg" alt="Live Event Atmosphere" class="cover__stage-bg">
+            </div>
+
+            <!-- Numa Hero Typography & Actions (Lower Left) -->
+            <div class="cover__content">
+              
+              <div class="cover__title text--base">
+                <div class="cover__title-mask">
+                  <h1 class="text h1">An AI system that</h1>
+                </div>
+                <div class="cover__title-mask">
+                  <h1 class="text h1"><span class="font-accent">sells</span> your tickets.</h1>
+                </div>
+              </div>
+
+              <div class="cover__subtitle text--muted">
+                <div class="subtitle__mask">
+                  <p class="text text-1">
+                    SoldShow builds your creative, runs your ticket page, and follows up automatically — so you're not chasing sales the week before your event.
+                  </p>
+                </div>
+              </div>
+
+              <div class="pre-order-button__wrapper">
+                <button type="button" class="button pre-order-button js-open-teardown">
+                  <span class="text-button button-text text--base">Get a free teardown</span>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Top Right Floating Telemetry Badge -->
+            <div class="cover__telemetry-badge mono">
+              <span class="badge-dot"></span>
+              <span>AI SYSTEM &bull; TICKET SALES INFRASTRUCTURE</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: THREE STAT CARDS ("Designed for active life" -> "Built to sell, not just design") -->
+  <section class="section numbers" id="system">
+    <div class="container numbers__container">
+      <div class="numbers__wrapper">
+
+        <!-- Title Block -->
+        <div class="numbers__content">
+          <h2 class="text h2 text--base">Built to <span class="font-accent">sell</span>, not just design</h2>
+        </div>
+
+        <!-- 3 Giant Stat Cards Grid (Numa Exact Layout) -->
+        <div class="numbers__cards-wrapper">
+          <div class="numbers__cards-grid">
+            
+            <!-- Card 1: 72 hours -->
+            <div class="numbers__card">
+              <div class="numbers__dots-wrapper">
+                <div class="numbers__dot-center"></div>
+              </div>
+              <div class="numbers__card-value text--base">
+                <h3 class="numbers-big-text mono">72</h3>
+                <h3 class="text-2 mono">hours</h3>
+              </div>
+              <div class="numbers__card-description text--base">
+                <h4 class="text text-2">Live in 72 hours</h4>
+                <p class="text text-1 text--muted">Your ticket page, creative, and tracking go live fast, while every other channel is still stuck in planning.</p>
+              </div>
+            </div>
+
+            <!-- Card 2: 24/7 -->
+            <div class="numbers__card">
+              <div class="numbers__dots-wrapper">
+                <div class="numbers__dot-center"></div>
+              </div>
+              <div class="numbers__card-value text--base">
+                <h3 class="numbers-big-text mono">24</h3>
+                <h3 class="text-2 mono">/ 7</h3>
+              </div>
+              <div class="numbers__card-description text--base">
+                <h4 class="text text-2">Never stops selling</h4>
+                <p class="text text-1 text--muted">The system follows up on every unsold ticket automatically, from first click to event day.</p>
+              </div>
+            </div>
+
+            <!-- Card 3: 100% -->
+            <div class="numbers__card">
+              <div class="numbers__dots-wrapper">
+                <div class="numbers__dot-center"></div>
+              </div>
+              <div class="numbers__card-value text--base">
+                <h3 class="numbers-big-text mono">100</h3>
+                <h3 class="text-2 mono">%</h3>
+              </div>
+              <div class="numbers__card-description text--base">
+                <h4 class="text text-2">Every ticket tracked</h4>
+                <p class="text text-1 text--muted">See exactly which channel sold which ticket, down to the cost per ticket.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: TAB SECTION ("Wear it easily, trust it daily" -> "Built to launch, trusted to deliver") -->
+  <section class="section advantages" id="advantages">
+    <div class="container advantages__camera">
+      <div class="advantages__wrapper">
+        
+        <!-- Left Part: Heading, 3 Tabs with sliding marker, Description & SLA Line -->
+        <div class="advantages__left-part">
+          
+          <div class="advantages__h3-heading">
+            <h2 class="text h3 text--base">Built to launch, <span class="font-accent">trusted</span> to deliver</h2>
+          </div>
+
+          <!-- Vertical Interactive Tabs with Sliding Pill Marker -->
+          <div class="advantages__tabs-wrapper">
+            <p tab="1" class="text text-4 advantages__tab is-active" id="tab-btn-1">
+              On Time
+            </p>
+            <p tab="2" class="text text-4 advantages__tab" id="tab-btn-2">
+              Tracked
+            </p>
+            <p tab="3" class="text text-4 advantages__tab" id="tab-btn-3">
+              Managed
+            </p>
+            <div class="advantages__marker fill--amber" id="tabs-marker">
+              <div class="advantages__marker-small fill--base"></div>
+            </div>
+          </div>
+
+          <!-- Dynamic Descriptions -->
+          <div class="advantages__description-wrapper">
+            <div class="advantages__description is-active" id="tab-desc-1">
+              <h3 class="text text--base h4">On Time 24/7</h3>
+              <p class="text text--muted text-1 advantages__text-description">
+                Fast 72-hour turnaround — Your ticket page and 12 creative variants launch without delaying your promotion schedule.
+              </p>
+            </div>
+            <div class="advantages__description" id="tab-desc-2">
+              <h3 class="text text--base h4">Tracked 24/7</h3>
+              <p class="text text--muted text-1 advantages__text-description">
+                Day-one attribution — Conversion tracking and analytics hooked up before the first ad dollar is spent.
+              </p>
+            </div>
+            <div class="advantages__description" id="tab-desc-3">
+              <h3 class="text text--base h4">Managed 24/7</h3>
+              <p class="text text--muted text-1 advantages__text-description">
+                The system runs on its own once live. Creative, page, and follow-up sequences all managed without you checking in.
+              </p>
+            </div>
+          </div>
+
+          <div class="system-sla-badge mono">
+            <span class="badge-dot"></span>
+            <span>Live and selling within <span class="font-accent" style="font-size: 1.15em; letter-spacing: 0;">72 hours</span>.</span>
+          </div>
+
+        </div>
+
+        <!-- Right Part: Large Rounded Showcase Window -->
+        <div class="advantages__right-part">
+          <div class="advantages__mask">
+            <div class="advantages__video-big-wrapper">
+              
+              <div class="advantages__video-wrapper is-active" id="adv-visual-1">
+                <img src="assets/concert.jpg" alt="On Time Launch" class="advantages__visual-img">
+                <div class="adv-caption mono">ON TIME 24/7 &bull; 72H DEPLOYMENT</div>
+              </div>
+
+              <div class="advantages__video-wrapper" id="adv-visual-2">
+                <img src="assets/conference.jpg" alt="Tracked Architecture" class="advantages__visual-img">
+                <div class="adv-caption mono">DAY ONE TRACKING &bull; CONVERSION API</div>
+              </div>
+
+              <div class="advantages__video-wrapper" id="adv-visual-3">
+                <img src="assets/nightlife.jpg" alt="Managed 24/7" class="advantages__visual-img">
+                <div class="adv-caption mono">MANAGED 24/7 &bull; AUTONOMOUS SEQUENCES</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTIONS 4, 5, 6: SCROLL TIMELINE (Scenes 1, 2, 3) -->
+  <section class="section timeline-section" id="timeline">
+    <div class="container timeline-camera">
+      <div class="timeline-wrapper">
+
+        <!-- Scene 3 ("no settings") Hero Banner (Section 6) -->
+        <div class="timeline-hero-card">
+          <div class="scene-badge mono">AUTONOMOUS CAMPAIGN ENGINE</div>
+          <div class="timeline-headline-wrap">
+            <h2 class="timeline-headline">
+              There are no settings. The system runs your campaign <span class="font-accent">itself</span>.
+            </h2>
+          </div>
+
+          <!-- Dynamic Demand Curve Visualization -->
+          <div class="timeline-interactive-graph">
+            <svg class="timeline-graph-svg" viewBox="0 0 800 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path id="timeline-curve-fill" d="M 0 100 Q 200 95, 380 90 T 580 75 Q 680 50, 750 20 L 800 12 L 800 120 L 0 120 Z" fill="url(#amber-grad)" opacity="0.15"/>
+              <path id="timeline-curve-path" d="M 0 100 Q 200 95, 380 90 T 580 75 Q 680 50, 750 20 L 800 12" stroke="#FFC233" stroke-width="3" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="amber-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#FFC233"/>
+                  <stop offset="100%" stop-color="#FFC233" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <circle id="timeline-dot-1" cx="180" cy="96" r="5" fill="#0B0D09"/>
+              <circle id="timeline-dot-2" cx="480" cy="85" r="5" fill="#0B0D09"/>
+              <circle id="timeline-dot-3" cx="750" cy="20" r="6" fill="#FFC233" stroke="#0B0D09" stroke-width="2"/>
+            </svg>
+          </div>
+
+          <!-- 3 Labels Under Timeline -->
+          <div class="timeline-pill-indicators">
+            <div class="timeline-stage-pill is-active" id="time-pill-1">
+              <span class="pill-dot"></span>
+              <span>Steady mode</span>
+            </div>
+            <div class="timeline-stage-pill" id="time-pill-2">
+              <span class="pill-dot"></span>
+              <span>Auto-correction</span>
+            </div>
+            <div class="timeline-stage-pill" id="time-pill-3">
+              <span class="pill-dot"></span>
+              <span>Rush detection</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline Scenes 1 & 2 Grid -->
+        <div class="timeline-scenes-grid">
+          
+          <!-- Scene 1: Last-chance rush (Section 4) -->
+          <div class="timeline-scene-card" id="timeline-scene-1">
+            <div class="scene-badge mono">FINAL 72 HOURS</div>
+            <div class="scene-text-wrap">
+              <h3 class="scene-title">Last-chance <span class="font-accent">rush</span></h3>
+              <p class="scene-caption">The system catches the spike in demand during the final 72 hours and pushes the last-chance sequence automatically.</p>
+            </div>
+          </div>
+
+          <!-- Scene 2: Steady mode (Section 5) -->
+          <div class="timeline-scene-card" id="timeline-scene-2">
+            <div class="scene-badge mono">QUIET WEEKS</div>
+            <div class="scene-text-wrap">
+              <h3 class="scene-title">Steady <span class="font-accent">mode</span></h3>
+              <p class="scene-caption">The system holds a steady pace of ticket sales during the quiet weeks — reminders running, page live, nothing idle.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: APP MOCKUP SECTION ("Managed in one app" -> "Managed in one dashboard") -->
+  <section class="section route-new" id="dashboard" style="padding-top: 5vw; padding-bottom: 5vw;">
+    <div class="container route__camera">
+      
+      <div class="numbers__content" style="padding-left: 2.52vw; margin-bottom: 2.5vw;">
+        <h2 class="text h2 text--base">Managed in one <span class="font-accent">dashboard</span></h2>
+      </div>
+
+      <div class="route__wrapper">
+        
+        <!-- Top Ribbon (Drifting Left) -->
+        <div class="route__content route__content--top" id="route-top">
+          <div class="route__image" style="background-image: url('assets/concert.jpg');"></div>
+          <div class="route__image" style="background-image: url('assets/nightlife.jpg');"></div>
+          <div class="route__image" style="background-image: url('assets/conference.jpg');"></div>
+          <div class="route__image" style="background-image: url('assets/fair.jpg');"></div>
+          <div class="route__image" style="background-image: url('assets/concert.jpg');"></div>
+        </div>
+
+        <!-- Middle Ribbon (Drifting Right) -->
+        <div class="route__content route__content--middle-new" id="route-mid">
+          <div class="route__image" style="background-image: url('assets/fair.jpg');"></div>
+          <div class="route__image" style="background-image: url('assets/conference.jpg');"></div>
+          <div class="route__image" style="background-image: url('assets/nightlife.jpg');"></div>
+        </div>
+
+        <!-- Bottom Ribbon (Drifting Left) -->
+        <div class="route__content route__content--bottom" id="route-bot">
+          <div class="route__image" style="background-image: url('assets/conference.jpg');"></div>
+          <div class="route__image" style="background-image: url('assets/concert.jpg');"></div>
+          <div class="route__image" style="background-image: url('assets/nightlife.jpg');"></div>
+          <div class="route__image" style="background-image: url('assets/fair.jpg');"></div>
+          <div class="route__image" style="background-image: url('assets/conference.jpg');"></div>
+        </div>
+
+        <!-- Floating Centerpiece Hardware-Grade Dashboard Screen -->
+        <div class="route__device-wrap">
+          <div class="centerpiece-telemetry-card">
+            
+            <div class="centerpiece-header">
+              <div class="centerpiece-title-wrap">
+                <span class="status-indicator"></span>
+                <span class="mono centerpiece-tag">ATTRIBUTION DASHBOARD &bull; LIVE FEED</span>
+              </div>
+              <div class="centerpiece-category-pills">
+                <span class="cat-pill active" data-cat="concerts">Concerts</span>
+                <span class="cat-pill" data-cat="nightlife">Nightlife</span>
+                <span class="cat-pill" data-cat="conferences">Conferences</span>
+                <span class="cat-pill" data-cat="fairs">Fairs</span>
+              </div>
+            </div>
+
+            <div class="centerpiece-stats-row">
+              <div class="centerpiece-stat-item">
+                <span class="stat-label mono">TOTAL TICKETS SOLD</span>
+                <span class="stat-value mono" id="cp-tickets">3,842</span>
+                <span class="stat-lift mono text--green">+38.4% vs prev</span>
+              </div>
+
+              <div class="centerpiece-stat-item">
+                <span class="stat-label mono">ATTRIBUTED REVENUE</span>
+                <span class="stat-value mono" id="cp-revenue">$192,100</span>
+                <span class="stat-lift mono text--green">+$54,320 net lift</span>
+              </div>
+
+              <div class="centerpiece-stat-item">
+                <span class="stat-label mono">AVG COST PER TICKET</span>
+                <span class="stat-value mono" id="cp-cpt">$4.12</span>
+                <span class="stat-lift mono text--muted">Meta + Email</span>
+              </div>
+            </div>
+
+            <!-- Live Attribution Channel Breakdown -->
+            <div class="centerpiece-channel-bars">
+              <div class="cp-channel">
+                <div class="cp-channel-meta mono">
+                  <span>Meta Ads (12 Static & Motion Variants)</span>
+                  <span id="cp-ch1">1,940 tix &bull; $3.80 CPT</span>
+                </div>
+                <div class="cp-track"><div class="cp-fill" style="width: 52%;"></div></div>
+              </div>
+
+              <div class="cp-channel">
+                <div class="cp-channel-meta mono">
+                  <span>Automated Sequences (Reminders & Abandoned Checkout)</span>
+                  <span id="cp-ch2">1,060 tix &bull; $0.48 CPT</span>
+                </div>
+                <div class="cp-track"><div class="cp-fill fill--amber" style="width: 28%;"></div></div>
+              </div>
+
+              <div class="cp-channel">
+                <div class="cp-channel-meta mono">
+                  <span>Tracked Lander & Direct Organic</span>
+                  <span id="cp-ch3">842 tix &bull; Zero ad spend</span>
+                </div>
+                <div class="cp-track"><div class="cp-fill" style="width: 20%;"></div></div>
+              </div>
+            </div>
+
+            <div class="centerpiece-ticker mono">
+              <span class="ticker-pulse"></span>
+              <span id="cp-ticker-text">[11:42:09] 4x Tier 1 VIP ($480.00) attributed to Ad Variant #03 (Motion) via tracked lander</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3 Feature Callout Cards (Section 7) -->
+      <div class="dashboard-features-grid" style="padding-left: 2.52vw; padding-right: 2.52vw;">
+        
+        <div class="dash-feature-card">
+          <h3 class="dash-feature-title">
+            <span class="dash-feature-dot"></span>
+            <span>Everything's on track</span>
+          </h3>
+          <p class="dash-feature-desc">The system flags what matters: a page going down, cost per ticket spiking, a sequence stalling. You'll know before it becomes a problem.</p>
+        </div>
+
+        <div class="dash-feature-card">
+          <h3 class="dash-feature-title">
+            <span class="dash-feature-dot"></span>
+            <span>Client access</span>
+          </h3>
+          <p class="dash-feature-desc">If you want your team to see it, you give them dashboard access. No separate reports to wait on.</p>
+        </div>
+
+        <div class="dash-feature-card">
+          <h3 class="dash-feature-title">
+            <span class="dash-feature-dot"></span>
+            <span>Live attribution</span>
+          </h3>
+          <p class="dash-feature-desc">The system syncs every channel and shows ticket count, spend, and cost per ticket in real time, no manual checking.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 8: START IN 3 SIMPLE STEPS -->
+  <section class="section steps" id="how-it-works">
+    <div class="container steps__camera">
+      <div class="steps__wrapper">
+        
+        <div class="steps__text-mask">
+          <h2 class="text h3 text--base">Start in 3 simple <span class="font-accent">steps</span></h2>
+        </div>
+
+        <!-- 3 Giant Step Cards -->
+        <div class="steps__cards">
+          
+          <!-- Step 1: Book the audit -->
+          <div class="steps__card">
+            <div class="steps__card-img">
+              <img src="assets/conference.jpg" alt="Audit Phase" class="image__img">
+            </div>
+            <div class="steps__card-text">
+              <div class="steps__card-top-text">
+                <div class="steps__card-icon mono">01</div>
+                <h3 class="text h4 text--base">Book the audit</h3>
+              </div>
+              <p class="text text-1 text--muted">
+                We review your ticketing, ads, and last event's numbers before anything gets built.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2: System goes live -->
+          <div class="steps__card">
+            <div class="steps__card-img">
+              <img src="assets/concert.jpg" alt="Build Phase" class="image__img">
+            </div>
+            <div class="steps__card-text">
+              <div class="steps__card-top-text">
+                <div class="steps__card-icon mono">02</div>
+                <h3 class="text h4 text--base">System goes live</h3>
+              </div>
+              <p class="text text-1 text--muted">
+                Your creative, tracked page, and sequences launch within 72 hours of sign-off.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3: It starts selling -->
+          <div class="steps__card">
+            <div class="steps__card-img">
+              <img src="assets/nightlife.jpg" alt="Sell Phase" class="image__img">
+            </div>
+            <div class="steps__card-text">
+              <div class="steps__card-top-text">
+                <div class="steps__card-icon mono">03</div>
+                <h3 class="text h4 text--base">It starts selling</h3>
+              </div>
+              <p class="text text-1 text--muted">
+                The system runs and reports automatically while you focus on your event.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 9: TESTIMONIALS (3 Cards) -->
+  <section class="section testimonials-section" id="testimonials">
+    <div class="container testimonials-camera">
+      <div class="testimonials-wrapper">
+        
+        <div class="testimonials-heading-wrap">
+          <h2 class="text h3 text--base">Trusted by Event <span class="font-accent">Organizers</span></h2>
+        </div>
+
+        <div class="testimonials-grid">
+          
+          <!-- Card 1 -->
+          <div class="testimonial-card">
+            <div class="testimonial-quote-icon">&ldquo;</div>
+            <p class="testimonial-quote">
+              "I stopped guessing which post actually sold tickets. Now I just watch the dashboard."
+            </p>
+            <div class="testimonial-author-wrap">
+              <span class="testimonial-author">Jordan Blake</span>
+              <span class="testimonial-role mono">[Demo] Event Promoter</span>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="testimonial-card">
+            <div class="testimonial-quote-icon">&ldquo;</div>
+            <p class="testimonial-quote">
+              "The page was live before I even finished picking a venue photo. That speed alone changed how I plan every show."
+            </p>
+            <div class="testimonial-author-wrap">
+              <span class="testimonial-author">Maria Torres</span>
+              <span class="testimonial-role mono">[Demo] Bar & Lounge Owner</span>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="testimonial-card">
+            <div class="testimonial-quote-icon">&ldquo;</div>
+            <p class="testimonial-quote">
+              "For the first time, I know exactly what my ad spend is doing before the show even starts."
+            </p>
+            <div class="testimonial-author-wrap">
+              <span class="testimonial-author">Chris Adeyemi</span>
+              <span class="testimonial-role mono">[Demo] Festival Organizer</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 10: FINAL CTA (Numa Gigantic Display) -->
+  <footer class="section footer" id="closing-cta">
+    <div class="container footer__container">
+      <div class="footer__wrapper">
+        
+        <div class="footer__h2--wrapper">
+          <h2 class="text text--base h2-copy">Start <span class="font-accent">selling</span></h2>
+        </div>
+
+        <div class="footer__description--wrapper">
+          <p class="text text-1 text--muted footer__text-width">
+            Built from your public pages and live ads. No access required to start.
+          </p>
+
+          <div class="footer__action-row">
+            <button type="button" class="button pre-order-button fill--amber js-open-teardown">
+              <span class="text-button button-text text--base">Get a free teardown</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Footer Bottom Bar -->
+        <div class="footer__bottom">
+          <div class="footer__border">
+            
+            <div class="footer__text-link--wrapper">
+              <span class="footer__link mono">&copy; 2026 SoldShow. Ticket sales system for event organizers. All rights reserved</span>
+            </div>
+
+            <div class="footer__text-link--bottom mono">
+              <span class="footer__link">Concerts &bull; Nightlife &bull; Conferences &bull; Fairs</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/lenis.min.js"></script>
+  <script src="assets/js/gsap.min.js"></script>
+  <script src="assets/js/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
