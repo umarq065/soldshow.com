@@ -4362,17 +4362,24 @@ footer.footer,
     font-size: clamp(1.8rem, 6.5vw, 2.5rem) !important;
     text-align: center !important;
   }
-  .timeline-steps-cards-stage {
+  .timeline-steps-cards-stage,
+  .steps__cards-stage {
     padding: 2vh 0 !important;
     overflow: hidden !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
   }
   .timeline-steps-cards-grid {
     display: flex !important;
     flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
     gap: 16px !important;
     padding: 0 9vw !important;
     width: max-content !important;
     max-width: none !important;
+    margin: 0 !important;
     height: min(540px, 72vh) !important;
     will-change: transform !important;
     pointer-events: auto !important;
