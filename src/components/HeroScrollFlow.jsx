@@ -29,131 +29,193 @@ export default function HeroScrollFlow({ onOpenTeardown }) {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Main Master Scrub Timeline
-      const masterTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top top',
-          end: '+=4200',
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1
-        }
+      const mm = gsap.matchMedia();
+
+      // =============================================================
+      // DESKTOP TIMELINE (>= 992px): Capsule shifts to left (-25vw)
+      // =============================================================
+      mm.add('(min-width: 992px)', () => {
+        const masterTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top top',
+            end: '+=4200',
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1
+          }
+        });
+
+        // Phase 1: Hero Shrinks into Center Capsule
+        masterTl
+          .to([heroContentRef.current, heroBadgeRef.current], {
+            y: -50,
+            opacity: 0,
+            filter: 'blur(8px)',
+            duration: 0.16,
+            ease: 'power2.inOut'
+          }, 0)
+          .to(heroMaskRef.current, {
+            width: 'clamp(280px, 32vw, 440px)',
+            height: 'clamp(170px, 19vw, 260px)',
+            borderRadius: '9999px',
+            duration: 0.18,
+            boxShadow: '0 25px 70px rgba(11, 13, 9, 0.25)',
+            ease: 'power2.inOut'
+          }, 0)
+          .to(heroImgRef.current, {
+            scale: 1.18,
+            opacity: 0.9,
+            duration: 0.18,
+            ease: 'power2.inOut'
+          }, 0);
+
+        // Phase 2: Capsule Photo Streams Flow in & Cross
+        masterTl
+          .to(streamWrapRef.current, { opacity: 1, duration: 0.06, ease: 'none' }, 0.18)
+          .fromTo(streamTopRef.current, { xPercent: 25, opacity: 0 }, { xPercent: -25, opacity: 1, duration: 0.26, ease: 'none' }, 0.18)
+          .fromTo(streamMidRef.current, { xPercent: -30, opacity: 0 }, { xPercent: 20, opacity: 1, duration: 0.26, ease: 'none' }, 0.18)
+          .fromTo(streamBotRef.current, { xPercent: 28, opacity: 0 }, { xPercent: -22, opacity: 1, duration: 0.26, ease: 'none' }, 0.18);
+
+        // Phase 3: Streams Slide Out -> Solitary Central Emblem
+        masterTl
+          .to(streamWrapRef.current, { opacity: 0, scale: 0.92, duration: 0.08, ease: 'power2.in' }, 0.44)
+          .to(heroMaskRef.current, { opacity: 0, scale: 0.85, duration: 0.08, ease: 'power2.in' }, 0.44)
+          .fromTo(productCapsuleRef.current,
+            { opacity: 0, scale: 0.82, y: 25 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.10, ease: 'power2.out' },
+            0.46
+          );
+
+        // Phase 4: Split Screen - Emblem Left + Big Text Right
+        masterTl
+          .to(productCapsuleRef.current, {
+            x: '-25vw',
+            y: 0,
+            rotation: -7,
+            scale: 0.96,
+            duration: 0.14,
+            ease: 'power2.inOut'
+          }, 0.62)
+          .fromTo(splitTextWrapRef.current,
+            { x: 80, y: 0, opacity: 0, filter: 'blur(8px)' },
+            { x: 0, y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.14, ease: 'power2.out' },
+            0.64
+          );
+
+        // Phase 5: Transition into Stat Cards
+        masterTl
+          .to([productCapsuleRef.current, splitTextWrapRef.current], {
+            y: -40,
+            opacity: 0,
+            scale: 0.92,
+            duration: 0.06,
+            ease: 'power2.in'
+          }, 0.82)
+          .fromTo(statCardsWrapRef.current,
+            { opacity: 0, y: 70, scale: 0.94 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.14, ease: 'power2.out' },
+            0.85
+          )
+          .fromTo('.flow-stat-card',
+            { y: 50, opacity: 0 },
+            { y: 0, opacity: 1, stagger: 0.03, duration: 0.12, ease: 'power2.out' },
+            0.86
+          );
       });
 
-      // -------------------------------------------------------------
-      // PHASE 1: Hero Shrinks into Center Capsule (0.00 -> 0.18)
-      // -------------------------------------------------------------
-      masterTl
-        .to([heroContentRef.current, heroBadgeRef.current], {
-          y: -50,
-          opacity: 0,
-          filter: 'blur(8px)',
-          duration: 0.16,
-          ease: 'power2.inOut'
-        }, 0)
-        .to(heroMaskRef.current, {
-          width: 'clamp(280px, 32vw, 440px)',
-          height: 'clamp(170px, 19vw, 260px)',
-          borderRadius: '9999px',
-          duration: 0.18,
-          boxShadow: '0 25px 70px rgba(11, 13, 9, 0.25)',
-          ease: 'power2.inOut'
-        }, 0)
-        .to(heroImgRef.current, {
-          scale: 1.18,
-          opacity: 0.9,
-          duration: 0.18,
-          ease: 'power2.inOut'
-        }, 0);
+      // =============================================================
+      // MOBILE & TABLET TIMELINE (< 992px): Capsule appears ABOVE text
+      // =============================================================
+      mm.add('(max-width: 991px)', () => {
+        const masterTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top top',
+            end: '+=3800',
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1
+          }
+        });
 
-      // -------------------------------------------------------------
-      // PHASE 2: Capsule Photo Streams Flow in & Cross (0.18 -> 0.44)
-      // -------------------------------------------------------------
-      masterTl
-        .to(streamWrapRef.current, {
-          opacity: 1,
-          duration: 0.06,
-          ease: 'none'
-        }, 0.18)
-        .fromTo(streamTopRef.current, 
-          { xPercent: 25, opacity: 0 },
-          { xPercent: -25, opacity: 1, duration: 0.26, ease: 'none' },
-          0.18
-        )
-        .fromTo(streamMidRef.current, 
-          { xPercent: -30, opacity: 0 },
-          { xPercent: 20, opacity: 1, duration: 0.26, ease: 'none' },
-          0.18
-        )
-        .fromTo(streamBotRef.current, 
-          { xPercent: 28, opacity: 0 },
-          { xPercent: -22, opacity: 1, duration: 0.26, ease: 'none' },
-          0.18
-        );
+        // Phase 1: Hero Shrinks into Center Capsule
+        masterTl
+          .to([heroContentRef.current, heroBadgeRef.current], {
+            y: -40,
+            opacity: 0,
+            filter: 'blur(6px)',
+            duration: 0.16,
+            ease: 'power2.inOut'
+          }, 0)
+          .to(heroMaskRef.current, {
+            width: 'clamp(230px, 62vw, 290px)',
+            height: 'clamp(135px, 36vw, 175px)',
+            borderRadius: '9999px',
+            duration: 0.18,
+            boxShadow: '0 20px 50px rgba(11, 13, 9, 0.22)',
+            ease: 'power2.inOut'
+          }, 0)
+          .to(heroImgRef.current, {
+            scale: 1.15,
+            opacity: 0.9,
+            duration: 0.18,
+            ease: 'power2.inOut'
+          }, 0);
 
-      // -------------------------------------------------------------
-      // PHASE 3: Streams Slide Out -> Solitary Central Emblem (0.44 -> 0.62)
-      // -------------------------------------------------------------
-      masterTl
-        .to(streamWrapRef.current, {
-          opacity: 0,
-          scale: 0.92,
-          duration: 0.08,
-          ease: 'power2.in'
-        }, 0.44)
-        .to(heroMaskRef.current, {
-          opacity: 0,
-          scale: 0.85,
-          duration: 0.08,
-          ease: 'power2.in'
-        }, 0.44)
-        .fromTo(productCapsuleRef.current,
-          { opacity: 0, scale: 0.82, y: 25 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.10, ease: 'power2.out' },
-          0.46
-        );
+        // Phase 2: Photo Streams Flow
+        masterTl
+          .to(streamWrapRef.current, { opacity: 1, duration: 0.06, ease: 'none' }, 0.18)
+          .fromTo(streamTopRef.current, { xPercent: 20, opacity: 0 }, { xPercent: -20, opacity: 1, duration: 0.26, ease: 'none' }, 0.18)
+          .fromTo(streamMidRef.current, { xPercent: -25, opacity: 0 }, { xPercent: 15, opacity: 1, duration: 0.26, ease: 'none' }, 0.18)
+          .fromTo(streamBotRef.current, { xPercent: 22, opacity: 0 }, { xPercent: -18, opacity: 1, duration: 0.26, ease: 'none' }, 0.18);
 
-      // -------------------------------------------------------------
-      // PHASE 4: Split Screen - Emblem Left + Big Text Right (0.62 -> 0.82)
-      // -------------------------------------------------------------
-      masterTl
-        // Product capsule shifts to the left third of the screen
-        .to(productCapsuleRef.current, {
-          x: '-25vw',
-          rotation: -7,
-          scale: 0.96,
-          duration: 0.14,
-          ease: 'power2.inOut'
-        }, 0.62)
-        // Big typography sweeps in from right
-        .fromTo(splitTextWrapRef.current,
-          { x: 80, opacity: 0, filter: 'blur(8px)' },
-          { x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.14, ease: 'power2.out' },
-          0.64
-        );
+        // Phase 3: Streams Slide Out -> Solitary Central Emblem
+        masterTl
+          .to(streamWrapRef.current, { opacity: 0, scale: 0.92, duration: 0.08, ease: 'power2.in' }, 0.44)
+          .to(heroMaskRef.current, { opacity: 0, scale: 0.85, duration: 0.08, ease: 'power2.in' }, 0.44)
+          .fromTo(productCapsuleRef.current,
+            { opacity: 0, scale: 0.75, y: 20, x: 0 },
+            { opacity: 1, scale: 0.88, y: 0, x: 0, duration: 0.10, ease: 'power2.out' },
+            0.46
+          );
 
-      // -------------------------------------------------------------
-      // PHASE 5: Transition into Stat Cards (0.82 -> 1.00)
-      // -------------------------------------------------------------
-      masterTl
-        .to([productCapsuleRef.current, splitTextWrapRef.current], {
-          y: -40,
-          opacity: 0,
-          scale: 0.92,
-          duration: 0.06,
-          ease: 'power2.in'
-        }, 0.82)
-        .fromTo(statCardsWrapRef.current,
-          { opacity: 0, y: 70, scale: 0.94 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.14, ease: 'power2.out' },
-          0.85
-        )
-        .fromTo('.flow-stat-card',
-          { y: 50, opacity: 0 },
-          { y: 0, opacity: 1, stagger: 0.03, duration: 0.12, ease: 'power2.out' },
-          0.86
-        );
+        // Phase 4: Capsule moves ABOVE the text (x: 0, y: -160, centered!), text appears below
+        masterTl
+          .to(productCapsuleRef.current, {
+            x: 0,
+            y: -155,
+            rotation: 0,
+            scale: 0.70,
+            duration: 0.14,
+            ease: 'power2.inOut'
+          }, 0.62)
+          .fromTo(splitTextWrapRef.current,
+            { y: 110, x: 0, opacity: 0, filter: 'blur(6px)' },
+            { y: 70, x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.14, ease: 'power2.out' },
+            0.64
+          );
+
+        // Phase 5: Transition into Stat Cards
+        masterTl
+          .to([productCapsuleRef.current, splitTextWrapRef.current], {
+            y: '-=40',
+            opacity: 0,
+            scale: 0.88,
+            duration: 0.06,
+            ease: 'power2.in'
+          }, 0.82)
+          .fromTo(statCardsWrapRef.current,
+            { opacity: 0, y: 50, scale: 0.96 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.14, ease: 'power2.out' },
+            0.85
+          )
+          .fromTo('.flow-stat-card',
+            { y: 35, opacity: 0 },
+            { y: 0, opacity: 1, stagger: 0.03, duration: 0.12, ease: 'power2.out' },
+            0.86
+          );
+      });
 
     }, containerRef);
 
