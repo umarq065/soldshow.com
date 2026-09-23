@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import gsap from 'gsap';
 
 export default function TeardownModal({ isOpen, onClose }) {
   const [eventName, setEventName] = useState('');
@@ -7,29 +8,132 @@ export default function TeardownModal({ isOpen, onClose }) {
   const [gross, setGross] = useState('$15k–$30k');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [shouldRender, setShouldRender] = useState(isOpen);
+
+  const modalRef = useRef(null);
+  const overlayRef = useRef(null);
+  const imgRef = useRef(null);
+  const formRef = useRef(null);
+  const closeBtnRef = useRef(null);
   const firstInputRef = useRef(null);
+  const isClosingRef = useRef(false);
 
   useEffect(() => {
     if (isOpen) {
-      const timer = setTimeout(() => {
-        if (firstInputRef.current) firstInputRef.current.focus();
-      }, 150);
-      return () => clearTimeout(timer);
-    } else {
-      setIsSubmitted(false);
-      setIsSubmitting(false);
+      isClosingRef.current = false;
+      setShouldRender(true);
+    } else if (shouldRender && !isClosingRef.current) {
+      handleClose();
     }
   }, [isOpen]);
 
+  const handleClose = () => {
+    if (isClosingRef.current) return;
+    isClosingRef.current = true;
+
+    if (!overlayRef.current || !modalRef.current) {
+      setShouldRender(false);
+      onClose();
+      return;
+    }
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setShouldRender(false);
+        isClosingRef.current = false;
+        setIsSubmitted(false);
+        setIsSubmitting(false);
+        onClose();
+      }
+    });
+
+    tl.to(modalRef.current, {
+      opacity: 0,
+      scale: 0.90,
+      y: 22,
+      rotateX: -4,
+      duration: 0.26,
+      ease: 'power2.in'
+    }, 0)
+    .to(overlayRef.current, {
+      opacity: 0,
+      backdropFilter: 'blur(0px)',
+      duration: 0.26,
+      ease: 'power2.in'
+    }, 0);
+  };
+
+  useLayoutEffect(() => {
+    if (!shouldRender || !isOpen) return;
+
+    const ctx = gsap.context(() => {
+      // 1. Overlay glassmorphism fade-in
+      gsap.fromTo(overlayRef.current,
+        { opacity: 0, backdropFilter: 'blur(0px)' },
+        { opacity: 1, backdropFilter: 'blur(12px)', duration: 0.45, ease: 'power2.out' }
+      );
+
+      // 2. Modal card stylish spring entrance with perspective tilt
+      gsap.fromTo(modalRef.current,
+        { opacity: 0, scale: 0.88, y: 35, rotateX: 6 },
+        { 
+          opacity: 1, 
+          scale: 1, 
+          y: 0, 
+          rotateX: 0, 
+          duration: 0.55, 
+          ease: 'back.out(1.15)',
+          clearProps: 'transform'
+        }
+      );
+
+      // 3. Left concert photo reveals with subtle settling
+      if (imgRef.current) {
+        gsap.fromTo(imgRef.current,
+          { opacity: 0, scale: 1.08 },
+          { opacity: 1, scale: 1, duration: 0.65, ease: 'power2.out' }
+        );
+      }
+
+      // 4. Staggered reveal of form header & inputs
+      const elementsToStagger = formRef.current?.querySelectorAll(
+        '.pop-up__description-wrapper, .pop-up_input-content, .pop-up__pravicy-policy, .pop-up-button'
+      );
+      if (elementsToStagger && elementsToStagger.length > 0) {
+        gsap.fromTo(elementsToStagger,
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, stagger: 0.05, duration: 0.38, ease: 'power2.out', delay: 0.12 }
+        );
+      }
+
+      // 5. Close button pops in with a stylish 90-degree twist
+      if (closeBtnRef.current) {
+        gsap.fromTo(closeBtnRef.current,
+          { opacity: 0, scale: 0.4, rotate: -90 },
+          { opacity: 1, scale: 1, rotate: 0, duration: 0.45, ease: 'back.out(1.8)', delay: 0.22 }
+        );
+      }
+    });
+
+    const timer = setTimeout(() => {
+      if (firstInputRef.current) firstInputRef.current.focus();
+    }, 380);
+
+    return () => {
+      ctx.revert();
+      clearTimeout(timer);
+    };
+  }, [shouldRender, isOpen]);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
+      if (e.key === 'Escape' && shouldRender) {
+        handleClose();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [shouldRender]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,32 +141,44 @@ export default function TeardownModal({ isOpen, onClose }) {
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
-    }, 500);
+      if (formRef.current) {
+        gsap.fromTo('.form__state-success',
+          { opacity: 0, scale: 0.95, y: 15 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: 'back.out(1.2)' }
+        );
+      }
+    }, 550);
   };
+
+  if (!shouldRender) return null;
 
   return (
     <div 
-      className={`pop-up pop-up__preorder ${isOpen ? 'is-active' : ''}`} 
+      className="pop-up pop-up__preorder is-active" 
       id="teardown-modal" 
       aria-hidden={!isOpen}
-      style={{ display: isOpen ? 'flex' : 'none' }}
     >
-      <div className="pop-up__overlay pop-up__bg js-close-popup" onClick={onClose}></div>
-      <div className="pop-up__content pop-up__contents">
+      <div 
+        ref={overlayRef} 
+        className="pop-up__overlay pop-up__bg js-close-popup" 
+        onClick={handleClose}
+      ></div>
+      <div ref={modalRef} className="pop-up__content pop-up__contents">
         <button 
+          ref={closeBtnRef}
           type="button" 
           className="pop-up__close js-close-popup" 
           aria-label="Close" 
-          onClick={onClose}
+          onClick={handleClose}
         ></button>
         
         {/* Modal Left Image */}
-        <div className="pop-up__img-wrapper">
+        <div ref={imgRef} className="pop-up__img-wrapper">
           <img src="/assets/concert.jpg" alt="SoldShow Live Event" className="pop-up__img-2" />
         </div>
 
         {/* Modal Right Form */}
-        <div className="pop-up__form">
+        <div ref={formRef} className="pop-up__form">
           {!isSubmitted ? (
             <form className="pop-up__default-form" id="popup-form" onSubmit={handleSubmit}>
               <div className="pop-up__description-wrapper">
@@ -157,7 +273,7 @@ export default function TeardownModal({ isOpen, onClose }) {
                 type="button" 
                 className="button pop-up-button fill--amber js-close-popup" 
                 style={{ marginTop: '2vw' }}
-                onClick={onClose}
+                onClick={handleClose}
               >
                 <span className="text-button button-text text--base">Close</span>
               </button>
