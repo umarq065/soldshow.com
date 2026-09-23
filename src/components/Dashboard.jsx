@@ -27,23 +27,7 @@ export default function Dashboard() {
       tag: 'REAL-TIME ATTRIBUTION',
       subtitle: 'The system syncs every channel and shows ticket count, spend, and cost per ticket in real time without manual checking.',
       chips: ['3,842 Tickets Sold', 'Auto-Sync Active'],
-      phoneTitle: 'Live Attribution',
-      phoneSubtitle: 'Live tracking of your ticket sales',
-      statLabel: 'Tickets Sold',
-      statValue: '3,842',
-      statUnit: 'tix',
-      statDelta: '+38.4% vs last event',
-      chartPath: 'M 0 18 Q 20 14, 40 16 T 70 8 Q 85 4, 100 6',
-      meta1: 'Meta Ads (12 Variants)',
-      meta1Val: '1,940 tix • $3.80 CPT',
-      meta2: 'Automated Sequences',
-      meta2Val: '1,060 tix • $0.48 CPT',
-      navActive: 'main',
-      recent: [
-        { name: '4x Tier 1 VIP ($480)', time: '2:15 PM' },
-        { name: '2x General Entry ($90)', time: '2:20 PM' },
-        { name: '3x All-Access Pass ($1,350)', time: '3:30 PM' }
-      ]
+      image: '/assets/dashboard-screen.png'
     },
     {
       id: 'tab-2',
@@ -52,23 +36,7 @@ export default function Dashboard() {
       tag: 'SYSTEM HEALTH & MONITORING',
       subtitle: "The system gently notifies you of important points. Low conversion, sudden fluctuations in CPT, inventory pace — you will find out everything on time and without too much noise.",
       chips: ['98.6% Health Score', '0ms Page Lag'],
-      phoneTitle: "Everything's On Track",
-      phoneSubtitle: 'All key indicators are within optimal range',
-      statLabel: 'Campaign Health',
-      statValue: '98.6%',
-      statUnit: 'score',
-      statDelta: 'All systems operational',
-      chartPath: 'M 0 16 Q 25 15, 50 14 T 80 10 Q 90 8, 100 9',
-      meta1: 'Ticket Page Uptime',
-      meta1Val: '100% • 0ms lag',
-      meta2: 'Tracking Accuracy',
-      meta2Val: '99.4% server-side verified',
-      navActive: 'monitor',
-      recent: [
-        { name: 'Pixel & CAPI verified', time: '12:00 PM' },
-        { name: 'Checkout funnel optimal', time: '1:15 PM' },
-        { name: '4 Sequences active', time: '2:45 PM' }
-      ]
+      image: '/assets/dashboard-screen.png'
     },
     {
       id: 'tab-3',
@@ -77,149 +45,92 @@ export default function Dashboard() {
       tag: 'STAKEHOLDER PORTAL',
       subtitle: 'Give your promoter team or clients direct access to the live attribution feed. No static PDF reports or waiting on weekly updates.',
       chips: ['4 Online Viewers', 'Live Telemetry Link'],
-      phoneTitle: 'Client & Team Access',
-      phoneSubtitle: 'Live multi-stakeholder dashboard',
-      statLabel: 'Active Viewers',
-      statValue: '4',
-      statUnit: 'online',
-      statDelta: 'Promoters & Stakeholders',
-      chartPath: 'M 0 19 Q 30 17, 55 12 T 85 8 Q 92 6, 100 7',
-      meta1: 'Promoter Link',
-      meta1Val: 'soldshow.com/live/e39',
-      meta2: 'Permissions',
-      meta2Val: 'View-only • Live telemetry',
-      navActive: 'team',
-      recent: [
-        { name: 'Promoter joined feed', time: '10:15 AM' },
-        { name: 'Report exported to CSV', time: '11:40 AM' },
-        { name: 'Finance link synced', time: '1:00 PM' }
-      ]
+      image: '/assets/dashboard-screen.png'
     }
   ];
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Set initial positions
-      gsap.set(phone1Ref.current, { yPercent: 0, opacity: 1, scale: 1 });
-      gsap.set(card1Ref.current, { yPercent: 0, opacity: 1, scale: 1 });
+      const mm = gsap.matchMedia();
 
-      gsap.set(phone2Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
-      gsap.set(card2Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
+      // DESKTOP: Smooth Pinned Scroll Stack (>= 992px)
+      mm.add('(min-width: 992px)', () => {
+        gsap.set(phone1Ref.current, { yPercent: 0, opacity: 1, scale: 1 });
+        gsap.set(card1Ref.current, { yPercent: 0, opacity: 1, scale: 1 });
 
-      gsap.set(phone3Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
-      gsap.set(card3Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
+        gsap.set(phone2Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
+        gsap.set(card2Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
 
-      const masterTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top top',
-          end: '+=3200',
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            const p = self.progress;
-            if (p < 0.35) {
-              setActiveTab(0);
-            } else if (p < 0.68) {
-              setActiveTab(1);
-            } else {
-              setActiveTab(2);
+        gsap.set(phone3Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
+        gsap.set(card3Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
+
+        const masterTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top top',
+            end: '+=2800',
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+            onUpdate: (self) => {
+              const p = self.progress;
+              if (p < 0.35) setActiveTab(0);
+              else if (p < 0.70) setActiveTab(1);
+              else setActiveTab(2);
             }
           }
-        }
+        });
+
+        // Stage 1 Dwell
+        masterTl.to({}, { duration: 0.15 });
+
+        // Transition 1 -> 2
+        masterTl
+          .to(phone1Ref.current, { yPercent: -14, scale: 0.96, opacity: 0.45, ease: 'power1.inOut', duration: 0.30 }, 0.15)
+          .to(card1Ref.current, { yPercent: -14, scale: 0.96, opacity: 0.45, ease: 'power1.inOut', duration: 0.30 }, 0.15)
+          .to(phone2Ref.current, { yPercent: 0, scale: 1, opacity: 1, ease: 'power1.inOut', duration: 0.30 }, 0.15)
+          .to(card2Ref.current, { yPercent: 0, scale: 1, opacity: 1, ease: 'power1.inOut', duration: 0.30 }, 0.15);
+
+        // Stage 2 Dwell
+        masterTl.to({}, { duration: 0.10 });
+
+        // Transition 2 -> 3
+        masterTl
+          .to(phone2Ref.current, { yPercent: -14, scale: 0.96, opacity: 0.45, ease: 'power1.inOut', duration: 0.30 }, 0.55)
+          .to(card2Ref.current, { yPercent: -14, scale: 0.96, opacity: 0.45, ease: 'power1.inOut', duration: 0.30 }, 0.55)
+          .to(phone3Ref.current, { yPercent: 0, scale: 1, opacity: 1, ease: 'power1.inOut', duration: 0.30 }, 0.55)
+          .to(card3Ref.current, { yPercent: 0, scale: 1, opacity: 1, ease: 'power1.inOut', duration: 0.30 }, 0.55);
+
+        // Stage 3 Dwell
+        masterTl.to({}, { duration: 0.15 });
+
+        stRef.current = masterTl.scrollTrigger;
       });
 
-      // -------------------------------------------------------------
-      // STAGE 1 REST (0.00 -> 0.15)
-      // -------------------------------------------------------------
-      masterTl.to({}, { duration: 0.15 });
+      // MOBILE & TABLET (< 992px): Interactive clean tabs
+      mm.add('(max-width: 991px)', () => {
+        const phones = [phone1Ref.current, phone2Ref.current, phone3Ref.current];
+        const cards = [card1Ref.current, card2Ref.current, card3Ref.current];
+        phones.forEach((p, idx) => {
+          if (!p) return;
+          gsap.set(p, { 
+            yPercent: 0, 
+            scale: 1, 
+            opacity: idx === 0 ? 1 : 0, 
+            display: idx === 0 ? 'block' : 'none' 
+          });
+        });
+        cards.forEach((c, idx) => {
+          if (!c) return;
+          gsap.set(c, { 
+            yPercent: 0, 
+            scale: 1, 
+            opacity: idx === 0 ? 1 : 0, 
+            display: idx === 0 ? 'block' : 'none' 
+          });
+        });
+      });
 
-      // -------------------------------------------------------------
-      // TRANSITION 1 -> 2: Phone 2 & Card 2 rise from below (0.15 -> 0.45)
-      // -------------------------------------------------------------
-      masterTl
-        // Phone 1 recedes slightly up
-        .to(phone1Ref.current, {
-          yPercent: -14,
-          scale: 0.96,
-          opacity: 0.45,
-          ease: 'power1.inOut',
-          duration: 0.30
-        }, 0.15)
-        // Card 1 recedes slightly up
-        .to(card1Ref.current, {
-          yPercent: -14,
-          scale: 0.96,
-          opacity: 0.45,
-          ease: 'power1.inOut',
-          duration: 0.30
-        }, 0.15)
-        // Phone 2 rises into view over Phone 1
-        .to(phone2Ref.current, {
-          yPercent: 0,
-          scale: 1,
-          opacity: 1,
-          ease: 'power1.inOut',
-          duration: 0.30
-        }, 0.15)
-        // Card 2 rises into view over Card 1
-        .to(card2Ref.current, {
-          yPercent: 0,
-          scale: 1,
-          opacity: 1,
-          ease: 'power1.inOut',
-          duration: 0.30
-        }, 0.15);
-
-      // -------------------------------------------------------------
-      // STAGE 2 REST (0.45 -> 0.55)
-      // -------------------------------------------------------------
-      masterTl.to({}, { duration: 0.10 });
-
-      // -------------------------------------------------------------
-      // TRANSITION 2 -> 3: Phone 3 & Card 3 rise from below (0.55 -> 0.85)
-      // -------------------------------------------------------------
-      masterTl
-        // Phone 2 recedes slightly up
-        .to(phone2Ref.current, {
-          yPercent: -14,
-          scale: 0.96,
-          opacity: 0.45,
-          ease: 'power1.inOut',
-          duration: 0.30
-        }, 0.55)
-        // Card 2 recedes slightly up
-        .to(card2Ref.current, {
-          yPercent: -14,
-          scale: 0.96,
-          opacity: 0.45,
-          ease: 'power1.inOut',
-          duration: 0.30
-        }, 0.55)
-        // Phone 3 rises into view over Phone 2
-        .to(phone3Ref.current, {
-          yPercent: 0,
-          scale: 1,
-          opacity: 1,
-          ease: 'power1.inOut',
-          duration: 0.30
-        }, 0.55)
-        // Card 3 rises into view over Card 2
-        .to(card3Ref.current, {
-          yPercent: 0,
-          scale: 1,
-          opacity: 1,
-          ease: 'power1.inOut',
-          duration: 0.30
-        }, 0.55);
-
-      // -------------------------------------------------------------
-      // STAGE 3 REST (0.85 -> 1.00)
-      // -------------------------------------------------------------
-      masterTl.to({}, { duration: 0.15 });
-
-      stRef.current = masterTl.scrollTrigger;
     }, containerRef);
 
     return () => ctx.revert();
@@ -227,114 +138,47 @@ export default function Dashboard() {
 
   const handlePillClick = (idx) => {
     setActiveTab(idx);
-    if (stRef.current && window.lenis) {
-      const st = stRef.current;
-      const targets = [0.08, 0.50, 0.90];
-      const targetScroll = st.start + targets[idx] * (st.end - st.start);
-      window.lenis.scrollTo(targetScroll, { duration: 0.8 });
+    if (window.innerWidth >= 992) {
+      if (stRef.current && window.lenis) {
+        const st = stRef.current;
+        const targets = [0.08, 0.50, 0.90];
+        const targetScroll = st.start + targets[idx] * (st.end - st.start);
+        window.lenis.scrollTo(targetScroll, { duration: 0.8 });
+      }
+    } else {
+      // Mobile crossfade
+      const phones = [phone1Ref.current, phone2Ref.current, phone3Ref.current];
+      const cards = [card1Ref.current, card2Ref.current, card3Ref.current];
+      phones.forEach((p, i) => {
+        if (!p) return;
+        if (i === idx) {
+          gsap.set(p, { display: 'block' });
+          gsap.to(p, { opacity: 1, duration: 0.3 });
+        } else {
+          gsap.to(p, { opacity: 0, duration: 0.2, onComplete: () => gsap.set(p, { display: 'none' }) });
+        }
+      });
+      cards.forEach((c, i) => {
+        if (!c) return;
+        if (i === idx) {
+          gsap.set(c, { display: 'block' });
+          gsap.to(c, { opacity: 1, duration: 0.3 });
+        } else {
+          gsap.to(c, { opacity: 0, duration: 0.2, onComplete: () => gsap.set(c, { display: 'none' }) });
+        }
+      });
     }
   };
 
-  // Helper to render individual phone screen
+  // Helper to render individual phone with clean screen image
   const renderPhoneMockup = (tab, ref, zIdx) => (
     <div ref={ref} className="numa-phone-stack-item" style={{ zIndex: zIdx }}>
-      <div className="numa-phone-outer">
-        {/* Dynamic Island */}
-        <div className="numa-phone-island"></div>
-        
-        {/* iOS Screen */}
-        <div className="numa-phone-screen">
-          {/* Status Bar */}
-          <div className="phone-statusbar">
-            <span className="phone-time">9:41</span>
-            <div className="phone-icons">
-              <span className="phone-signal">••••</span>
-              <span className="phone-wifi">WiFi</span>
-              <span className="phone-battery">100%</span>
-            </div>
-          </div>
-
-          {/* App Header */}
-          <div className="phone-app-header">
-            <h4 className="phone-screen-title">{tab.phoneTitle}</h4>
-            <p className="phone-screen-sub">{tab.phoneSubtitle}</p>
-            <div className="phone-live-indicator">
-              <span className="phone-live-dot"></span>
-              <span>Updated just now</span>
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="phone-app-content">
-            {/* Stat Card */}
-            <div className="phone-metric-box">
-              <div className="phone-metric-meta">
-                <span className="phone-metric-label">{tab.statLabel}</span>
-                <span className="phone-metric-tag">Live</span>
-              </div>
-              <div className="phone-metric-val-row">
-                <span className="phone-metric-num">{tab.statValue}</span>
-                <span className="phone-metric-unit">{tab.statUnit}</span>
-              </div>
-
-              {/* Mini Wave Chart */}
-              <div className="phone-mini-chart">
-                <svg viewBox="0 0 100 24" className="phone-chart-svg">
-                  <path 
-                    d={tab.chartPath} 
-                    fill="none" 
-                    stroke="#FFC233" 
-                    strokeWidth="2.5" 
-                    strokeLinecap="round" 
-                  />
-                  <line x1="0" y1="12" x2="100" y2="12" stroke="#e2e8f0" strokeDasharray="3 3" strokeWidth="1" />
-                </svg>
-              </div>
-              <div className="phone-delta-label">{tab.statDelta}</div>
-            </div>
-
-            {/* Channel Breakdown Rows */}
-            <div className="phone-channel-row">
-              <span className="phone-ch-name">{tab.meta1}</span>
-              <span className="phone-ch-val">{tab.meta1Val}</span>
-            </div>
-            <div className="phone-channel-row">
-              <span className="phone-ch-name">{tab.meta2}</span>
-              <span className="phone-ch-val">{tab.meta2Val}</span>
-            </div>
-
-            {/* Activity Feed */}
-            <div className="phone-feed-list">
-              {tab.recent.map((item, rIdx) => (
-                <div className="phone-feed-item" key={rIdx}>
-                  <span className="feed-item-name">{item.name}</span>
-                  <span className="feed-item-time">{item.time}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Bottom Nav */}
-          <div className="phone-bottom-nav">
-            <div className={`nav-tab ${tab.navActive === 'main' ? 'active' : ''}`}>
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-              <span>Main</span>
-            </div>
-            <div className="nav-tab">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-              <span>Stats</span>
-            </div>
-            <div className={`nav-tab ${tab.navActive === 'monitor' ? 'active' : ''}`}>
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-              <span>Monitor</span>
-            </div>
-            <div className={`nav-tab ${tab.navActive === 'team' ? 'active' : ''}`}>
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              <span>Team</span>
-            </div>
-          </div>
-
-        </div>
+      <div className="numa-phone-outer numa-phone-outer--clean">
+        <img 
+          src={tab.image} 
+          alt={tab.title} 
+          className="numa-phone-mockup-img" 
+        />
       </div>
     </div>
   );
