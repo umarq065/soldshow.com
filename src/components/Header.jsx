@@ -80,7 +80,8 @@ export default function Header({ onOpenTeardown, onToggleMenu }) {
             onClick={onOpenTeardown}
           >
             <span className="text-button menu-item-text text--base">
-              <span>Get a free teardown</span>
+              <span className="header-btn-text-desktop">Get a free teardown</span>
+              <span className="header-btn-text-mobile">Teardown</span>
             </span>
             <span className="svg-icon header-button__svg-icon">
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
