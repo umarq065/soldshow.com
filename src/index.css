@@ -4102,26 +4102,34 @@ footer.footer,
     font-weight: 600 !important;
   }
 
-  /* Dashboard Section Overrides */
+  /* Dashboard Section Overrides (Pinned 100vh on Mobile) */
   .dashboard-numa-section {
-    height: auto !important;
+    height: 100vh !important;
     min-height: 100vh !important;
-    padding: 85px 16px 50px !important;
+    max-height: 100vh !important;
+    padding: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-start !important;
-    overflow: visible !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
   }
   .dashboard-numa-container {
-    height: auto !important;
-    max-width: 520px !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    max-width: 440px !important;
     width: 100% !important;
     margin: 0 auto !important;
-    grid-template-columns: 1fr !important;
+    padding: calc(var(--nav-height) + 8px) 16px 14px !important;
+    box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
+    justify-content: space-between !important;
     align-items: center !important;
-    gap: 22px !important;
+    gap: 8px !important;
+    overflow: hidden !important;
+    flex: 1 1 auto !important;
   }
   .dashboard-numa-col-left {
     height: auto !important;
@@ -4132,91 +4140,127 @@ footer.footer,
     flex-direction: column !important;
     justify-content: center !important;
     width: 100% !important;
+    flex-shrink: 0 !important;
+    order: 1 !important;
   }
   .dashboard-numa-title {
-    font-size: clamp(1.9rem, 6.8vw, 2.6rem) !important;
+    font-size: clamp(1.35rem, 4.8vw, 1.75rem) !important;
     text-align: center !important;
     line-height: 1.1 !important;
-    margin-bottom: 6px !important;
+    margin-bottom: 2px !important;
   }
   .dashboard-numa-badges {
-    margin: 8px auto 0 !important;
+    display: none !important;
+  }
+  .dashboard-numa-col-right {
+    display: contents !important;
+  }
+  .dashboard-numa-pill-nav {
+    display: flex !important;
     justify-content: center !important;
+    gap: 6px !important;
+    margin: 2px 0 !important;
+    width: 100% !important;
+    flex-shrink: 0 !important;
+    order: 2 !important;
+  }
+  .dashboard-nav-pill {
+    font-size: 0.72rem !important;
+    padding: 5px 10px !important;
   }
   .dashboard-numa-col-center {
+    flex: 1 1 auto !important;
     height: auto !important;
     width: 100% !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
+    min-height: 0 !important;
+    order: 3 !important;
+    margin: 2px 0 !important;
   }
   .numa-phone-stack-stage {
     position: relative !important;
-    height: clamp(380px, 52vh, 460px) !important;
-    width: clamp(220px, 64vw, 280px) !important;
+    height: clamp(210px, 31vh, 280px) !important;
+    width: clamp(155px, 46vw, 210px) !important;
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
     margin: 0 auto !important;
+    overflow: hidden !important;
   }
   .numa-phone-stack-item {
     position: absolute !important;
     inset: 0 !important;
     width: 100% !important;
     height: 100% !important;
-  }
-  .dashboard-phone-clean-mockup {
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 36px !important;
-    border-width: 6px !important;
-  }
-  .dashboard-numa-col-right {
-    width: 100% !important;
-    max-width: 440px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    margin-top: 6px !important;
-  }
-  .dashboard-numa-pill-nav {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    margin-bottom: 16px !important;
-    width: 100% !important;
-  }
-  .dashboard-nav-pill {
-    font-size: 0.82rem !important;
-    padding: 7px 13px !important;
+    will-change: transform, opacity !important;
   }
   .numa-card-stack-viewport {
-    height: auto !important;
-    min-height: 160px !important;
-    width: 100% !important;
     position: relative !important;
+    height: clamp(140px, 20vh, 175px) !important;
+    width: 100% !important;
+    max-width: 400px !important;
+    overflow: hidden !important;
+    border-radius: 18px !important;
+    flex-shrink: 0 !important;
+    order: 4 !important;
   }
   .numa-card-stack-item {
-    position: relative !important;
-    inset: auto !important;
+    position: absolute !important;
+    inset: 0 !important;
     width: 100% !important;
+    height: 100% !important;
+    border-radius: 18px !important;
+    background: #0b0d09 !important;
+    border: 1.5px solid rgba(255, 194, 51, 0.4) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28) !important;
+    will-change: transform, opacity !important;
+    display: flex !important;
   }
   .numa-card-content {
-    border-radius: 20px !important;
-    padding: 20px 18px !important;
+    border-radius: 18px !important;
+    padding: 12px 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
   }
-  .card-chip-tag {
-    font-size: 0.68rem !important;
+  .numa-card-top-badge {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+  .numa-card-tag {
+    font-size: 0.60rem !important;
+    color: #FFC233 !important;
+    letter-spacing: 0.10em !important;
   }
   .numa-card-title {
-    font-size: 1.35rem !important;
-    line-height: 1.2 !important;
-    margin-bottom: 10px !important;
+    font-size: 1.15rem !important;
+    line-height: 1.15 !important;
+    margin: 2px 0 3px !important;
+    color: #ffffff !important;
   }
   .numa-card-desc {
-    font-size: 0.88rem !important;
-    line-height: 1.5 !important;
+    font-size: 0.78rem !important;
+    line-height: 1.35 !important;
+    color: #94a3b8 !important;
+    margin: 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+  .numa-card-chips {
+    display: flex !important;
+    gap: 6px !important;
+  }
+  .numa-card-chip {
+    font-size: 0.62rem !important;
+    padding: 2px 7px !important;
   }
 
   /* Hero Flow Product Capsule (Sold Show Emblem) on Mobile */

@@ -107,28 +107,58 @@ export default function Dashboard() {
         stRef.current = masterTl.scrollTrigger;
       });
 
-      // MOBILE & TABLET (< 992px): Interactive clean tabs
+      // MOBILE & TABLET (< 992px): Pinned Scroll Stack matching desktop sequence
       mm.add('(max-width: 991px)', () => {
-        const phones = [phone1Ref.current, phone2Ref.current, phone3Ref.current];
-        const cards = [card1Ref.current, card2Ref.current, card3Ref.current];
-        phones.forEach((p, idx) => {
-          if (!p) return;
-          gsap.set(p, { 
-            yPercent: 0, 
-            scale: 1, 
-            opacity: idx === 0 ? 1 : 0, 
-            display: idx === 0 ? 'block' : 'none' 
-          });
+        gsap.set(phone1Ref.current, { yPercent: 0, opacity: 1, scale: 1 });
+        gsap.set(card1Ref.current, { yPercent: 0, opacity: 1, scale: 1 });
+
+        gsap.set(phone2Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
+        gsap.set(card2Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
+
+        gsap.set(phone3Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
+        gsap.set(card3Ref.current, { yPercent: 110, opacity: 1, scale: 0.98 });
+
+        const mobileTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top top',
+            end: '+=2400',
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+            onUpdate: (self) => {
+              const p = self.progress;
+              if (p < 0.35) setActiveTab(0);
+              else if (p < 0.70) setActiveTab(1);
+              else setActiveTab(2);
+            }
+          }
         });
-        cards.forEach((c, idx) => {
-          if (!c) return;
-          gsap.set(c, { 
-            yPercent: 0, 
-            scale: 1, 
-            opacity: idx === 0 ? 1 : 0, 
-            display: idx === 0 ? 'block' : 'none' 
-          });
-        });
+
+        // Stage 1 Dwell
+        mobileTl.to({}, { duration: 0.15 });
+
+        // Transition 1 -> 2
+        mobileTl
+          .to(phone1Ref.current, { yPercent: -10, scale: 0.96, opacity: 0.35, ease: 'power1.inOut', duration: 0.30 }, 0.15)
+          .to(card1Ref.current, { yPercent: -8, scale: 0.98, opacity: 0, ease: 'power1.inOut', duration: 0.25 }, 0.15)
+          .to(phone2Ref.current, { yPercent: 0, scale: 1, opacity: 1, ease: 'power1.inOut', duration: 0.30 }, 0.15)
+          .to(card2Ref.current, { yPercent: 0, scale: 1, opacity: 1, ease: 'power1.inOut', duration: 0.30 }, 0.15);
+
+        // Stage 2 Dwell
+        mobileTl.to({}, { duration: 0.10 });
+
+        // Transition 2 -> 3
+        mobileTl
+          .to(phone2Ref.current, { yPercent: -10, scale: 0.96, opacity: 0.35, ease: 'power1.inOut', duration: 0.30 }, 0.55)
+          .to(card2Ref.current, { yPercent: -8, scale: 0.98, opacity: 0, ease: 'power1.inOut', duration: 0.25 }, 0.55)
+          .to(phone3Ref.current, { yPercent: 0, scale: 1, opacity: 1, ease: 'power1.inOut', duration: 0.30 }, 0.55)
+          .to(card3Ref.current, { yPercent: 0, scale: 1, opacity: 1, ease: 'power1.inOut', duration: 0.30 }, 0.55);
+
+        // Stage 3 Dwell
+        mobileTl.to({}, { duration: 0.15 });
+
+        stRef.current = mobileTl.scrollTrigger;
       });
 
     }, containerRef);
@@ -138,35 +168,15 @@ export default function Dashboard() {
 
   const handlePillClick = (idx) => {
     setActiveTab(idx);
-    if (window.innerWidth >= 992) {
-      if (stRef.current && window.lenis) {
-        const st = stRef.current;
-        const targets = [0.08, 0.50, 0.90];
-        const targetScroll = st.start + targets[idx] * (st.end - st.start);
+    if (stRef.current) {
+      const st = stRef.current;
+      const targets = [0.08, 0.50, 0.90];
+      const targetScroll = st.start + targets[idx] * (st.end - st.start);
+      if (window.lenis) {
         window.lenis.scrollTo(targetScroll, { duration: 0.8 });
+      } else {
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
       }
-    } else {
-      // Mobile crossfade
-      const phones = [phone1Ref.current, phone2Ref.current, phone3Ref.current];
-      const cards = [card1Ref.current, card2Ref.current, card3Ref.current];
-      phones.forEach((p, i) => {
-        if (!p) return;
-        if (i === idx) {
-          gsap.set(p, { display: 'block' });
-          gsap.to(p, { opacity: 1, duration: 0.3 });
-        } else {
-          gsap.to(p, { opacity: 0, duration: 0.2, onComplete: () => gsap.set(p, { display: 'none' }) });
-        }
-      });
-      cards.forEach((c, i) => {
-        if (!c) return;
-        if (i === idx) {
-          gsap.set(c, { display: 'block' });
-          gsap.to(c, { opacity: 1, duration: 0.3 });
-        } else {
-          gsap.to(c, { opacity: 0, duration: 0.2, onComplete: () => gsap.set(c, { display: 'none' }) });
-        }
-      });
     }
   };
 

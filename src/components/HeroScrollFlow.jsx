@@ -133,7 +133,7 @@ export default function HeroScrollFlow({ onOpenTeardown }) {
           scrollTrigger: {
             trigger: containerRef.current,
             start: 'top top',
-            end: '+=4400',
+            end: '+=4800',
             pin: true,
             scrub: 1,
             anticipatePin: 1
@@ -146,7 +146,7 @@ export default function HeroScrollFlow({ onOpenTeardown }) {
             y: -40,
             opacity: 0,
             filter: 'blur(6px)',
-            duration: 0.16,
+            duration: 0.12,
             ease: 'power2.inOut'
           }, 0)
           .to(heroMaskRef.current, {
@@ -154,74 +154,74 @@ export default function HeroScrollFlow({ onOpenTeardown }) {
             height: 'clamp(120px, 34vw, 155px)',
             borderRadius: '9999px',
             opacity: 0,
-            duration: 0.18,
+            duration: 0.14,
             boxShadow: '0 15px 45px rgba(11, 13, 9, 0.15)',
             ease: 'power2.inOut'
           }, 0)
           .to(heroImgRef.current, {
             scale: 1.15,
             opacity: 0,
-            duration: 0.18,
+            duration: 0.14,
             ease: 'power2.inOut'
           }, 0);
 
         // Phase 2: Photo Streams Flow dynamically across screen
         masterTl
-          .to(streamWrapRef.current, { opacity: 1, duration: 0.06, ease: 'none' }, 0.18)
-          .fromTo(streamTopRef.current, { xPercent: 20, opacity: 0 }, { xPercent: -20, opacity: 1, duration: 0.26, ease: 'none' }, 0.18)
-          .fromTo(streamMidRef.current, { xPercent: -25, opacity: 0 }, { xPercent: 15, opacity: 1, duration: 0.26, ease: 'none' }, 0.18)
-          .fromTo(streamBotRef.current, { xPercent: 22, opacity: 0 }, { xPercent: -18, opacity: 1, duration: 0.26, ease: 'none' }, 0.18);
+          .to(streamWrapRef.current, { opacity: 1, duration: 0.05, ease: 'none' }, 0.12)
+          .fromTo(streamTopRef.current, { xPercent: 20, opacity: 0 }, { xPercent: -20, opacity: 1, duration: 0.24, ease: 'none' }, 0.12)
+          .fromTo(streamMidRef.current, { xPercent: -25, opacity: 0 }, { xPercent: 15, opacity: 1, duration: 0.24, ease: 'none' }, 0.12)
+          .fromTo(streamBotRef.current, { xPercent: 22, opacity: 0 }, { xPercent: -18, opacity: 1, duration: 0.24, ease: 'none' }, 0.12);
 
         // Phase 3: Streams Slide Out -> Solitary Central Emblem
         masterTl
-          .to(streamWrapRef.current, { opacity: 0, scale: 0.92, duration: 0.08, ease: 'power2.in' }, 0.44)
+          .to(streamWrapRef.current, { opacity: 0, scale: 0.90, duration: 0.06, ease: 'power2.in' }, 0.34)
           .fromTo(productCapsuleRef.current,
-            { opacity: 0, scale: 0.75, y: 20, x: 0 },
-            { opacity: 1, scale: 0.88, y: 0, x: 0, duration: 0.10, ease: 'power2.out' },
-            0.46
+            { opacity: 0, scale: 0.78, y: 20, x: 0 },
+            { opacity: 1, scale: 0.90, y: 0, x: 0, duration: 0.08, ease: 'power2.out' },
+            0.40
           );
 
-        // Phase 4: Capsule moves ABOVE the text (x: 0, y: -155, centered!), text appears below
+        // Phase 4: Capsule moves ABOVE the text (centered), text appears below & dwells
         masterTl
           .to(productCapsuleRef.current, {
             x: 0,
-            y: -155,
+            y: -150,
             rotation: 0,
             scale: 0.70,
-            duration: 0.14,
+            duration: 0.08,
             ease: 'power2.inOut'
-          }, 0.62)
+          }, 0.48)
           .fromTo(splitTextWrapRef.current,
             { y: 110, x: 0, opacity: 0, filter: 'blur(6px)' },
-            { y: 70, x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.14, ease: 'power2.out' },
-            0.64
+            { y: 65, x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.08, ease: 'power2.out' },
+            0.50
           );
 
         // Phase 5: Transition into Stat Cards with HORIZONTAL SCROLL SCRUB
         masterTl
           .to([productCapsuleRef.current, splitTextWrapRef.current], {
-            y: -50,
+            y: -40,
             opacity: 0,
-            scale: 0.85,
-            duration: 0.04,
+            scale: 0.88,
+            duration: 0.05,
             ease: 'power2.in'
-          }, 0.78)
+          }, 0.66)
           .fromTo(statCardsWrapRef.current,
-            { opacity: 0, y: 40, scale: 0.98 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.04, ease: 'power2.out' },
-            0.82
+            { opacity: 0, y: 35, scale: 0.98 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.05, ease: 'power2.out' },
+            0.70
           )
           .fromTo('.flow-stat-card',
-            { y: 30, opacity: 0 },
+            { y: 25, opacity: 0 },
             { y: 0, opacity: 1, stagger: 0.015, duration: 0.04, ease: 'power2.out' },
-            0.83
+            0.71
           )
           // Right-to-Left horizontal scroll scrub as user scrolls down!
           .to(statCardsContainerRef.current, {
             x: () => -(window.innerWidth * 0.82 * 2 + 32),
             ease: 'none',
-            duration: 0.15
-          }, 0.85);
+            duration: 0.22
+          }, 0.76);
       });
 
     }, containerRef);
