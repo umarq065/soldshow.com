@@ -120,6 +120,7 @@ export default function Timeline({ onOpenTeardown }) {
   const stepsStageRef = useRef(null);
   const stepsTitleRef = useRef(null);
   const stepsCardsStageRef = useRef(null);
+  const stepsCardsGridRef = useRef(null);
   const cardsRef = useRef([]);
   const cardImagesRef = useRef([]);
   const cardBadgesRef = useRef([]);
@@ -449,6 +450,15 @@ export default function Timeline({ onOpenTeardown }) {
         );
       }
 
+      // On mobile screens (< 992px), scrub the 3 steps cards horizontally to the left!
+      if (window.innerWidth <= 991 && stepsCardsGridRef.current) {
+        tl.to(stepsCardsGridRef.current, {
+          x: () => -(window.innerWidth * 0.82 * 2 + 32),
+          ease: 'none',
+          duration: 0.16
+        }, 0.84);
+      }
+
       // Settled plateau: 0.88 -> 1.0 (cards fully cover the section)
 
       // Recalculate on window resize
@@ -684,7 +694,7 @@ export default function Timeline({ onOpenTeardown }) {
 
           {/* 3 Step Cards that rise with staggered 3D depth */}
           <div className="timeline-steps-cards-stage" ref={stepsCardsStageRef}>
-            <div className="timeline-steps-cards-grid">
+            <div className="timeline-steps-cards-grid" ref={stepsCardsGridRef}>
               
               {/* Step 1: Book the audit */}
               <div className="steps__numa-card" ref={(el) => (cardsRef.current[0] = el)}>

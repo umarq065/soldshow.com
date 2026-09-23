@@ -204,17 +204,17 @@ body {
 
 .h1 {
   font-family: var(--font-heading);
-  font-size: 5.24vw;
-  line-height: 96%;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.2rem, 5.24vw, 5rem);
+  line-height: 98%;
+  letter-spacing: -0.035em;
   font-weight: 600;
   color: var(--base);
 }
 
 .h2 {
   font-family: var(--font-heading);
-  font-size: 11.5vw;
-  line-height: 98%;
+  font-size: clamp(2rem, 6.5vw, 4.2rem);
+  line-height: 1.0;
   letter-spacing: -0.03em;
   font-weight: 600;
   color: var(--base);
@@ -222,8 +222,8 @@ body {
 
 .h2-copy {
   font-family: var(--font-heading);
-  font-size: 10.5vw;
-  line-height: 90%;
+  font-size: clamp(1.8rem, 5.5vw, 3.6rem);
+  line-height: 1.05;
   letter-spacing: -0.03em;
   font-weight: 600;
   text-align: center;
@@ -232,8 +232,8 @@ body {
 
 .h3 {
   font-family: var(--font-heading);
-  font-size: 3.8vw;
-  line-height: 102%;
+  font-size: clamp(1.25rem, 3.2vw, 2.2rem);
+  line-height: 1.1;
   letter-spacing: -0.025em;
   font-weight: 600;
   color: var(--base);
@@ -241,7 +241,7 @@ body {
 
 .h4 {
   font-family: var(--font-heading);
-  font-size: 1.75vw;
+  font-size: clamp(1.05rem, 1.8vw, 1.4rem);
   letter-spacing: -0.02em;
   font-weight: 600;
   line-height: 1.25;
@@ -250,16 +250,16 @@ body {
 
 .text-1 {
   font-family: var(--font-body);
-  font-size: 1.41vw;
+  font-size: clamp(0.92rem, 1.35vw, 1.15rem);
   font-weight: 400;
   letter-spacing: -0.015em;
-  line-height: 145%;
+  line-height: 150%;
   color: var(--muted);
 }
 
 .text-2 {
   font-family: var(--font-body);
-  font-size: 1.71vw;
+  font-size: clamp(1.05rem, 1.7vw, 1.35rem);
   letter-spacing: -0.02em;
   font-weight: 600;
   color: var(--base);
@@ -267,7 +267,7 @@ body {
 
 .text-3 {
   font-family: var(--font-body);
-  font-size: 1.61vw;
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
   font-weight: 400;
   letter-spacing: -0.015em;
   color: var(--base);
@@ -275,7 +275,7 @@ body {
 
 .text-4 {
   font-family: var(--font-body);
-  font-size: 1.41vw;
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
   font-weight: 400;
   letter-spacing: -0.015em;
   color: var(--muted);
@@ -283,14 +283,14 @@ body {
 
 .button-text {
   font-family: var(--font-body);
-  font-size: 1.51vw;
+  font-size: clamp(0.88rem, 1.4vw, 1.05rem) !important;
   letter-spacing: -0.015em;
   font-weight: 600;
 }
 
 .menu-item-text {
   font-family: var(--font-body);
-  font-size: 1.35vw;
+  font-size: clamp(0.85rem, 1.3vw, 0.95rem) !important;
   letter-spacing: -0.015em;
   font-weight: 600;
   color: var(--base);
@@ -298,7 +298,7 @@ body {
 
 .numbers-big-text {
   font-family: var(--font-body);
-  font-size: 7.26vw;
+  font-size: clamp(2.5rem, 7.26vw, 5.5rem);
   letter-spacing: -0.035em;
   line-height: 90%;
   font-weight: 700;
@@ -306,12 +306,12 @@ body {
 }
 
 .numbers-small-text {
-  font-size: 1.41vw;
+  font-size: clamp(0.85rem, 1.4vw, 1.05rem);
   letter-spacing: -0.02em;
 }
 
 .submenu-item-text {
-  font-size: 1.41vw;
+  font-size: clamp(0.85rem, 1.4vw, 1.05rem);
   letter-spacing: -0.02em;
   font-weight: 500;
   color: var(--base);
@@ -2340,24 +2340,25 @@ footer.footer,
 }
 
 .numa-stat-card__bottom {
-  height: 36%;
+  height: 38%;
   background: #ffffff;
-  padding: 2.2vw;
+  padding: 1.5rem 1.6rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .numa-stat-card__title {
-  font-size: 1.5vw;
+  font-size: clamp(1.2rem, 2.4vw, 1.6rem);
   font-weight: 700;
   color: #0b0d09;
-  margin: 0 0 0.8vw 0;
+  margin: 0 0 0.5rem 0;
   font-family: 'Blauer Nue', sans-serif;
+  line-height: 1.2;
 }
 
 .numa-stat-card__desc {
-  font-size: 1.0vw;
+  font-size: clamp(0.88rem, 1.5vw, 1.02rem);
   line-height: 1.48;
   color: #555a60;
   margin: 0;
@@ -3708,7 +3709,7 @@ footer.footer,
   justify-content: space-around;
   padding: 3vh 0;
   pointer-events: none;
-  z-index: 6;
+  z-index: 15;
   opacity: 0;
   overflow: hidden;
 }
@@ -3760,7 +3761,7 @@ footer.footer,
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  z-index: 12;
+  z-index: 20;
 }
 
 .hero-flow-product-capsule {
@@ -3914,7 +3915,7 @@ footer.footer,
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 20;
+  z-index: 25;
   opacity: 0;
   pointer-events: none;
   will-change: transform, opacity;
@@ -3963,18 +3964,26 @@ footer.footer,
   }
   .menu__wrapper {
     width: auto !important;
-    height: 38px !important;
+    height: 40px !important;
+    min-height: 40px !important;
     border-radius: 999px !important;
-    padding: 0 12px !important;
+    padding: 0 14px !important;
     margin-right: 0 !important;
     flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    overflow: hidden !important;
   }
   .menu__head {
     padding: 0 !important;
-    gap: 6px !important;
+    gap: 7px !important;
     height: 100% !important;
     display: flex !important;
     align-items: center !important;
+  }
+  .menu__line,
+  .menu__items {
+    display: none !important;
   }
   .logo__wrapper {
     position: static !important;
@@ -3991,10 +4000,11 @@ footer.footer,
     width: auto !important;
   }
   .header-button {
-    height: 38px !important;
-    padding: 0 12px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 15px !important;
     border-radius: 999px !important;
-    column-gap: 5px !important;
+    column-gap: 6px !important;
     flex-shrink: 0 !important;
   }
   .header-btn-text-desktop {
@@ -4002,7 +4012,8 @@ footer.footer,
   }
   .header-btn-text-mobile {
     display: inline !important;
-    font-size: 0.82rem !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
   }
 
   /* ==========================================================================
@@ -4022,13 +4033,13 @@ footer.footer,
     height: 100% !important;
   }
   .hero-flow-mask {
-    width: calc(100vw - 16px) !important;
-    height: calc(100vh - 16px) !important;
-    height: calc(100dvh - 16px) !important;
-    border-radius: 18px !important;
-    margin: 8px auto !important;
-    position: relative !important;
-    overflow: hidden !important;
+    width: calc(100vw - 16px);
+    height: calc(100vh - 16px);
+    height: calc(100dvh - 16px);
+    border-radius: 18px;
+    margin: 8px auto;
+    position: relative;
+    overflow: hidden;
   }
   .hero-flow-stage-bg {
     opacity: 0.22 !important;
@@ -4036,20 +4047,23 @@ footer.footer,
   }
   .hero-flow-telemetry-badge {
     position: absolute !important;
-    top: 60px !important;
-    left: 18px !important;
+    top: 62px !important;
+    left: 16px !important;
     bottom: auto !important;
     right: auto !important;
-    font-size: 0.62rem !important;
-    padding: 5px 11px !important;
+    font-size: 0.68rem !important;
+    padding: 6px 14px !important;
     border-radius: 999px !important;
     z-index: 5 !important;
     letter-spacing: 0.08em !important;
+    white-space: nowrap !important;
+    max-width: fit-content !important;
+    display: inline-flex !important;
   }
   .hero-flow-content {
     position: absolute !important;
     inset: 0 !important;
-    padding: 85px 18px 24px !important;
+    padding: 100px 18px 24px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
@@ -4061,18 +4075,18 @@ footer.footer,
     margin-bottom: 12px !important;
   }
   .hero-flow-title .h1 {
-    font-size: clamp(1.85rem, 7.2vw, 2.6rem) !important;
-    line-height: 1.06 !important;
+    font-size: clamp(2rem, 7.5vw, 2.75rem) !important;
+    line-height: 1.05 !important;
     letter-spacing: -0.03em !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
   }
   .hero-flow-subtitle {
     max-width: 100% !important;
     margin-bottom: 18px !important;
   }
   .hero-flow-subtitle .text-1 {
-    font-size: clamp(0.86rem, 3.6vw, 0.98rem) !important;
-    line-height: 1.46 !important;
+    font-size: clamp(0.92rem, 3.8vw, 1.05rem) !important;
+    line-height: 1.48 !important;
     color: var(--muted) !important;
     max-width: 90vw !important;
   }
@@ -4081,9 +4095,11 @@ footer.footer,
     width: auto !important;
   }
   .pre-order-button {
-    padding: 12px 22px !important;
+    min-height: 44px !important;
+    padding: 12px 24px !important;
     border-radius: 999px !important;
-    font-size: 0.90rem !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
   }
 
   /* Dashboard Section Overrides */
@@ -4263,26 +4279,59 @@ footer.footer,
     text-align: center !important;
     margin: 0 auto !important;
   }
+  .hero-flow-stat-cards-wrapper {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+  }
   .hero-flow-stat-cards-container {
     display: flex !important;
-    overflow-x: auto !important;
-    scroll-snap-type: x mandatory !important;
-    gap: 14px !important;
-    padding: 10px 16px 20px !important;
-    width: 100% !important;
-    max-width: 100vw !important;
+    flex-wrap: nowrap !important;
+    gap: 16px !important;
+    padding: 0 9vw !important;
+    width: max-content !important;
+    max-width: none !important;
     height: auto !important;
+    will-change: transform !important;
     -webkit-overflow-scrolling: touch !important;
   }
   .hero-flow-stat-cards-container::-webkit-scrollbar {
     display: none !important;
   }
   .numa-stat-card.flow-stat-card {
+    width: 82vw !important;
     min-width: 82vw !important;
-    max-width: 320px !important;
+    max-width: 82vw !important;
     flex-shrink: 0 !important;
-    scroll-snap-align: center !important;
-    height: min(480px, 70vh) !important;
+    height: min(490px, 70vh) !important;
+    border-radius: 24px !important;
+  }
+  .numa-stat-card.flow-stat-card .numa-stat-card__bottom {
+    padding: 16px 18px !important;
+    height: 40% !important;
+  }
+  .numa-stat-card.flow-stat-card .numa-stat-card__title {
+    font-size: 1.35rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 6px !important;
+    line-height: 1.2 !important;
+  }
+  .numa-stat-card.flow-stat-card .numa-stat-card__desc {
+    font-size: 0.90rem !important;
+    line-height: 1.48 !important;
+    color: #555a60 !important;
+  }
+  .numa-stat-card.flow-stat-card .numa-stat-card__num {
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+  }
+  .numa-stat-card.flow-stat-card .numa-stat-card__unit {
+    font-size: 1.15rem !important;
   }
 
   /* Timeline & Steps */
@@ -4314,26 +4363,29 @@ footer.footer,
     text-align: center !important;
   }
   .timeline-steps-cards-stage {
-    padding: 2vh 12px !important;
+    padding: 2vh 0 !important;
+    overflow: hidden !important;
   }
   .timeline-steps-cards-grid {
     display: flex !important;
-    overflow-x: auto !important;
-    scroll-snap-type: x mandatory !important;
-    gap: 14px !important;
+    flex-wrap: nowrap !important;
+    gap: 16px !important;
+    padding: 0 9vw !important;
+    width: max-content !important;
+    max-width: none !important;
     height: min(540px, 72vh) !important;
-    padding: 8px 12px 16px !important;
-    -webkit-overflow-scrolling: touch !important;
+    will-change: transform !important;
     pointer-events: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
   .timeline-steps-cards-grid::-webkit-scrollbar {
     display: none !important;
   }
   .steps__numa-card {
     width: 82vw !important;
-    max-width: 320px !important;
+    min-width: 82vw !important;
+    max-width: 82vw !important;
     flex-shrink: 0 !important;
-    scroll-snap-align: center !important;
     border-radius: 20px !important;
     padding: 12px !important;
   }
@@ -4342,11 +4394,13 @@ footer.footer,
     border-radius: 14px !important;
   }
   .steps__card-title {
-    font-size: 1.15rem !important;
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 6px !important;
   }
   .steps__card-desc {
-    font-size: 0.88rem !important;
-    line-height: 1.45 !important;
+    font-size: 0.90rem !important;
+    line-height: 1.48 !important;
   }
 
   /* Testimonials & Footer */
@@ -4375,13 +4429,25 @@ footer.footer,
     max-width: 95px !important;
   }
   .header-button {
-    padding: 0 10px !important;
+    padding: 0 12px !important;
   }
   .header-btn-text-mobile {
-    font-size: 0.78rem !important;
+    font-size: 0.82rem !important;
   }
   .menu__wrapper {
     padding: 0 10px !important;
+  }
+  .hero-flow-telemetry-badge {
+    top: 54px !important;
+    left: 12px !important;
+    font-size: 0.62rem !important;
+    padding: 5px 10px !important;
+  }
+  .hero-flow-content {
+    padding: 85px 14px 20px !important;
+  }
+  .hero-flow-title .h1 {
+    font-size: clamp(1.8rem, 7.5vw, 2.3rem) !important;
   }
 }
 

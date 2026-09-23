@@ -26,6 +26,7 @@ export default function HeroScrollFlow({ onOpenTeardown }) {
 
   // Stage 5 (Stat Cards)
   const statCardsWrapRef = useRef(null);
+  const statCardsContainerRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -125,21 +126,21 @@ export default function HeroScrollFlow({ onOpenTeardown }) {
       });
 
       // =============================================================
-      // MOBILE & TABLET TIMELINE (< 992px): Capsule appears ABOVE text
+      // MOBILE & TABLET TIMELINE (< 992px): Horizontal scrub for cards
       // =============================================================
       mm.add('(max-width: 991px)', () => {
         const masterTl = gsap.timeline({
           scrollTrigger: {
             trigger: containerRef.current,
             start: 'top top',
-            end: '+=3800',
+            end: '+=4400',
             pin: true,
             scrub: 1,
             anticipatePin: 1
           }
         });
 
-        // Phase 1: Hero Shrinks into Center Capsule
+        // Phase 1: Hero Shrinks into Center Capsule & Fades background
         masterTl
           .to([heroContentRef.current, heroBadgeRef.current], {
             y: -40,
@@ -149,21 +150,22 @@ export default function HeroScrollFlow({ onOpenTeardown }) {
             ease: 'power2.inOut'
           }, 0)
           .to(heroMaskRef.current, {
-            width: 'clamp(230px, 62vw, 290px)',
-            height: 'clamp(135px, 36vw, 175px)',
+            width: 'clamp(210px, 58vw, 270px)',
+            height: 'clamp(120px, 34vw, 155px)',
             borderRadius: '9999px',
+            opacity: 0,
             duration: 0.18,
-            boxShadow: '0 20px 50px rgba(11, 13, 9, 0.22)',
+            boxShadow: '0 15px 45px rgba(11, 13, 9, 0.15)',
             ease: 'power2.inOut'
           }, 0)
           .to(heroImgRef.current, {
             scale: 1.15,
-            opacity: 0.9,
+            opacity: 0,
             duration: 0.18,
             ease: 'power2.inOut'
           }, 0);
 
-        // Phase 2: Photo Streams Flow
+        // Phase 2: Photo Streams Flow dynamically across screen
         masterTl
           .to(streamWrapRef.current, { opacity: 1, duration: 0.06, ease: 'none' }, 0.18)
           .fromTo(streamTopRef.current, { xPercent: 20, opacity: 0 }, { xPercent: -20, opacity: 1, duration: 0.26, ease: 'none' }, 0.18)
@@ -173,14 +175,13 @@ export default function HeroScrollFlow({ onOpenTeardown }) {
         // Phase 3: Streams Slide Out -> Solitary Central Emblem
         masterTl
           .to(streamWrapRef.current, { opacity: 0, scale: 0.92, duration: 0.08, ease: 'power2.in' }, 0.44)
-          .to(heroMaskRef.current, { opacity: 0, scale: 0.85, duration: 0.08, ease: 'power2.in' }, 0.44)
           .fromTo(productCapsuleRef.current,
             { opacity: 0, scale: 0.75, y: 20, x: 0 },
             { opacity: 1, scale: 0.88, y: 0, x: 0, duration: 0.10, ease: 'power2.out' },
             0.46
           );
 
-        // Phase 4: Capsule moves ABOVE the text (x: 0, y: -160, centered!), text appears below
+        // Phase 4: Capsule moves ABOVE the text (x: 0, y: -155, centered!), text appears below
         masterTl
           .to(productCapsuleRef.current, {
             x: 0,
@@ -196,25 +197,31 @@ export default function HeroScrollFlow({ onOpenTeardown }) {
             0.64
           );
 
-        // Phase 5: Transition into Stat Cards
+        // Phase 5: Transition into Stat Cards with HORIZONTAL SCROLL SCRUB
         masterTl
           .to([productCapsuleRef.current, splitTextWrapRef.current], {
-            y: '-=40',
+            y: -50,
             opacity: 0,
-            scale: 0.88,
-            duration: 0.06,
+            scale: 0.85,
+            duration: 0.04,
             ease: 'power2.in'
-          }, 0.82)
+          }, 0.78)
           .fromTo(statCardsWrapRef.current,
-            { opacity: 0, y: 50, scale: 0.96 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.14, ease: 'power2.out' },
-            0.85
+            { opacity: 0, y: 40, scale: 0.98 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.04, ease: 'power2.out' },
+            0.82
           )
           .fromTo('.flow-stat-card',
-            { y: 35, opacity: 0 },
-            { y: 0, opacity: 1, stagger: 0.03, duration: 0.12, ease: 'power2.out' },
-            0.86
-          );
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, stagger: 0.015, duration: 0.04, ease: 'power2.out' },
+            0.83
+          )
+          // Right-to-Left horizontal scroll scrub as user scrolls down!
+          .to(statCardsContainerRef.current, {
+            x: () => -(window.innerWidth * 0.82 * 2 + 32),
+            ease: 'none',
+            duration: 0.15
+          }, 0.85);
       });
 
     }, containerRef);
@@ -418,7 +425,7 @@ export default function HeroScrollFlow({ onOpenTeardown }) {
             LAYER 5: SECTION 2 STAT CARDS (72 Hours, 24/7, 100% Attribution)
             =================================================================== */}
         <div ref={statCardsWrapRef} className="hero-flow-stat-cards-wrapper" id="system">
-          <div className="hero-flow-stat-cards-container">
+          <div ref={statCardsContainerRef} className="hero-flow-stat-cards-container">
             {statCardsData.map((card, idx) => (
               <div className="numa-stat-card flow-stat-card" key={idx}>
                 
